@@ -1,19 +1,18 @@
-from sys import stdin
+import sys
 import tokenize
 
+__version__ = '0.1.0'
 
-__version__ = '0.0.2'
 
-
-class DoubleQuoteChecker(object):
+class QuoteChecker(object):
     name = __name__
     version = __version__
 
     def __init__(self, tree, filename='(none)', builtins=None):
-        self.file = (filename == 'stdin' and stdin) or filename
+        self.file = (filename == 'stdin' and sys.stdin) or filename
 
     def run(self):
-        if self.file == stdin:
+        if self.file is sys.stdin:
             file_contents = self.file
         else:
             with open(self.file, 'r') as file_to_check:
@@ -55,15 +54,12 @@ def get_double_quotes_errors(file_contents):
             continue
 
         start_row, start_col = token.start
-        yield {
-            'message': 'Q000 Remove Double quotes.',
-            'line': start_row,
-            'col': start_col
-        }
+        yield {'message': 'Q000 Strings should use single quotes.',
+               'line': start_row,
+               'col': start_col}
 
 
-class Token:
-    '''Python 2 and 3 compatible token'''
+class Token(object):
     def __init__(self, token):
         self.token = token
 
