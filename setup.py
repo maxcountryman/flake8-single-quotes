@@ -1,6 +1,6 @@
 import io
 from setuptools import setup
-import flake8_quotes
+import flake8_single_quotes
 
 
 def read(*filenames, **kwargs):
@@ -15,34 +15,23 @@ def read(*filenames, **kwargs):
 
 long_description = read('README.rst')
 
-
-setup(
-    name='flake8-quotes',
-    author='Zachary Wright Heller',
-    version=flake8_quotes.__version__,
-    install_requires=[
-        'setuptools',
-    ],
-    url='http://github.com/zheller/flake8-quotes/',
-    long_description=long_description,
-    description='Flake8 lint for double quotes.',
-    py_modules=['flake8_quotes'],
-    test_suite='test',
-    include_package_data=True,
-    entry_points={
-        'flake8.extension': [
-            'flake8_quotes = flake8_quotes:DoubleQuoteChecker',
-        ],
-    },
-    classifiers=[
-        'Development Status :: 3 - Alpha',
-        'Environment :: Console',
-        'Intended Audience :: Developers',
-        'Operating System :: OS Independent',
-        'License :: OSI Approved :: MIT License',
-        'Programming Language :: Python',
-        'Programming Language :: Python :: 2',
-        'Topic :: Software Development :: Libraries :: Python Modules',
-        'Topic :: Software Development :: Quality Assurance',
-    ]
-)
+setup(name='flake8-single-quotes',
+      author='Max Countryman',
+      version=flake8_quotes.__version__,
+      install_requires=['setuptools'],
+      url='http://github.com/maxcountryman/flake8-single-quotes/',
+      long_description=long_description,
+      description='Flake8 linter for enforcing single quotes.',
+      py_modules=['flake8_single_quotes'],
+      test_suite='test',
+      include_package_data=True,
+      entry_points={'flake8.extension': ['flake8_sinle_quotes = flake8_single_quotes:QuoteChecker']},
+      classifiers=['Development Status :: 4 - Beta',
+                   'Environment :: Console',
+                   'Intended Audience :: Developers',
+                   'Operating System :: OS Independent',
+                   'License :: OSI Approved :: MIT License',
+                   'Programming Language :: Python',
+                   'Programming Language :: Python :: 2',
+                   'Topic :: Software Development :: Libraries :: Python Modules',
+                   'Topic :: Software Development :: Quality Assurance'])
