@@ -3,6 +3,8 @@ import tokenize
 
 __version__ = '0.1.0'
 
+NOQA = 'noqa'
+
 
 class QuoteChecker(object):
     name = __name__
@@ -23,37 +25,45 @@ class QuoteChecker(object):
 
         for error in errors:
             if error.get('line') not in noqa_line_numbers:
-                yield (error.get('line'), error.get('col'), error.get('message'), type(self))
+                line = error.get('line')
+                col = error.get('col')
+                message = error.get('message')
+                yield (line, col, message, type(self))
 
 
 def get_noqa_lines(file_contents):
-    tokens = [Token(t) for t in tokenize.generate_tokens(lambda L=iter(file_contents): next(L))]
-    return [token.start_row
-            for token in tokens
-            if token.type == tokenize.COMMENT and token.string.endswith('noqa')]
+    tokens = []
+    for t in tokenize.generate_tokens(lambda l=iter(file_contents): next(l)):
+        tokens.append(Token(t))
+
+    lines = []
+    for t in tokens:
+        noqa = t.string.lower().endswith(NOQA)
+        if t.type == tokenize.COMMENT and noqa:
+            lines.append(t.start_row)
+
+    return lines
 
 
 def get_double_quotes_errors(file_contents):
-    tokens = [Token(t) for t in tokenize.generate_tokens(lambda L=iter(file_contents): next(L))]
-    for token in tokens:
+    tokens = []
+    for t in tokenize.generate_tokens(lambda l=iter(file_contents): next(l)):
+        tokens.append(Token(t))
 
-        if token.type != tokenize.STRING:
-            # ignore non strings
+    for t in tokens:
+        # Ignore non-strings.
+        if t.type != tokenize.STRING:
             continue
 
-        if not token.string.startswith('"'):
-            # ignore strings that do not start with doubles
+        # Ignore strings that don't start with double quotes.
+        if not t.string.startswith('"'):
             continue
 
-        if token.string.startswith('"""'):
-            # ignore multiline strings
+        # Ignore single quotes wrapped in double quotes.
+        if "'" in t.string:
             continue
 
-        if "'" in token.string:
-            # ignore singles wrapped in doubles
-            continue
-
-        start_row, start_col = token.start
+        start_row, start_col = t.start
         yield {'message': 'Q000 Strings should use single quotes.',
                'line': start_row,
                'col': start_col}
