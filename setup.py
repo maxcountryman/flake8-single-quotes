@@ -6,8 +6,7 @@ A Flake8 extension to enforce single-quotes.
 
 Links
 `````
-* `development version
-<https://github.com/maxcountryman/flake8-single-quotes>`_
+* `development version <https://github.com/maxcountryman/flake8-single-quotes>`_
 '''
 import sys
 
