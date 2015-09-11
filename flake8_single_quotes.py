@@ -15,13 +15,13 @@ class QuoteChecker(object):
 
     def run(self):
         if self.file is sys.stdin:
-            file_contents = self.file
+            lines = self.file
         else:
-            with open(self.file, 'r') as file_to_check:
-                file_contents = file_to_check.readlines()
+            with open(self.file, 'r') as f:
+                lines = f.readlines()
 
-        noqa_line_numbers = get_noqa_lines(file_contents)
-        errors = get_double_quotes_errors(file_contents)
+        noqa_line_numbers = get_noqa_lines(lines)
+        errors = get_double_quotes_errors(lines)
 
         for error in errors:
             if error.get('line') not in noqa_line_numbers:
@@ -31,9 +31,9 @@ class QuoteChecker(object):
                 yield (line, col, message, type(self))
 
 
-def get_noqa_lines(file_contents):
+def get_noqa_lines(lines):
     tokens = []
-    for t in tokenize.generate_tokens(lambda l=iter(file_contents): next(l)):
+    for t in tokenize.generate_tokens(lambda l=iter(lines): next(l)):
         tokens.append(Token(t))
 
     lines = []
@@ -45,9 +45,9 @@ def get_noqa_lines(file_contents):
     return lines
 
 
-def get_double_quotes_errors(file_contents):
+def get_double_quotes_errors(lines):
     tokens = []
-    for t in tokenize.generate_tokens(lambda l=iter(file_contents): next(l)):
+    for t in tokenize.generate_tokens(lambda l=iter(lines): next(l)):
         tokens.append(Token(t))
 
     for t in tokens:
