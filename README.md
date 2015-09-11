@@ -2,6 +2,8 @@
 
 **A Flake8 extension to enforce single-quotes.**
 
+[![Build Status](https://travis-ci.org/maxcountryman/flake8-single-quotes.svg)](https://travis-ci.org/maxcountryman/flake8-single-quotes)
+
 
 ## Installation
 
