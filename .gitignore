@@ -1,6 +1,8 @@
 *.egg
 *.egg-info
 *.py[cod]
+.cache/
+.coverage
 .tox
 dist
 build

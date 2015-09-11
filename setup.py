@@ -9,10 +9,32 @@ Links
 * `development version
 <https://github.com/maxcountryman/flake8-single-quotes>`_
 '''
+import sys
 
-from setuptools import setup
+from setuptools import find_packages, setup
+from setuptools.command.test import test as TestCommand
 
 import flake8_single_quotes
+
+setup_requires = ['pytest', 'tox']
+install_requires = ['setuptools', 'tox']
+tests_requires = ['pytest-cov', 'pytest-cache']
+
+
+class PyTest(TestCommand):
+    def finalize_options(self):
+        TestCommand.finalize_options(self)
+        self.test_args = ['--strict',
+                          '--verbose',
+                          '--tb=long',
+                          '--cov', 'flake8_single_quotes.py',
+                          '--cov-report', 'term-missing', 'tests']
+        self.test_suite = True
+
+    def run_tests(self):
+        import pytest
+        errno = pytest.main(self.test_args)
+        sys.exit(errno)
 
 
 ext_checker_str = 'flake8_single_quotes = flake8_single_quotes:QuoteChecker'
@@ -21,14 +43,12 @@ setup(name='flake8-single-quotes',
       author='Max Countryman',
       author_email='maxc@me.com',
       version=flake8_single_quotes.__version__,
-      install_requires=['setuptools'],
       url='http://github.com/maxcountryman/flake8-single-quotes/',
-      long_description=__doc__,
       description='A Flake8 extension to enforce single-quotes.',
+      long_description=__doc__,
       py_modules=['flake8_single_quotes'],
-      test_suite='test',
-      include_package_data=True,
       entry_points={'flake8.extension': [ext_checker_str]},
+      packages=find_packages(exclude=['tests']),
       classifiers=['Development Status :: 4 - Beta',
                    'Environment :: Console',
                    'Intended Audience :: Developers',
@@ -37,4 +57,9 @@ setup(name='flake8-single-quotes',
                    'Programming Language :: Python',
                    'Programming Language :: Python :: 2',
                    'Topic :: Software Development :: Quality Assurance'],
+      cmdclass={'test': PyTest},
+      setup_requires=setup_requires,
+      install_requires=install_requires,
+      tests_require=tests_requires,
+      extras_require={'test': tests_requires},
       zip_safe=False)
