@@ -1,6 +1,6 @@
 # Flake8-Single-Quotes
 
-*A Flake8 extension to enforce single-quotes*
+**A Flake8 extension to enforce single-quotes.**
 
 
 ## Installation
